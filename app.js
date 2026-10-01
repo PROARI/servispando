@@ -701,7 +701,8 @@
     });
 
     // Menú móvil
-    dom.mobileToggle.addEventListener('click', () => {
+    dom.mobileToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
       const isOpen = dom.navMenu.classList.toggle('open');
       dom.mobileToggle.setAttribute('aria-expanded', isOpen);
     });
@@ -712,6 +713,14 @@
         dom.navMenu.classList.remove('open');
         dom.mobileToggle.setAttribute('aria-expanded', 'false');
       });
+    });
+
+    // Cerrar menú al hacer clic fuera
+    document.addEventListener('click', (e) => {
+      if (dom.navMenu.classList.contains('open') && !dom.navMenu.contains(e.target) && !dom.mobileToggle.contains(e.target)) {
+        dom.navMenu.classList.remove('open');
+        dom.mobileToggle.setAttribute('aria-expanded', 'false');
+      }
     });
 
     // Pestañas de la guía de código ("¿Dónde está mi código?")

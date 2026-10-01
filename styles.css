@@ -306,14 +306,31 @@ button {
   gap: 12px;
 }
 
+.btn-header-wa {
+  flex-shrink: 0;
+}
+
+.btn-wa-mobile-text {
+  display: none;
+}
+
 .mobile-toggle {
   display: none;
   flex-direction: column;
   justify-content: space-around;
-  width: 32px;
-  height: 32px;
-  background: transparent;
-  padding: 4px;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 10px 8px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.mobile-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--border-glow);
 }
 
 .mobile-toggle span {
@@ -321,7 +338,21 @@ button {
   height: 2px;
   background-color: var(--text-main);
   border-radius: 2px;
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+}
+
+.mobile-toggle[aria-expanded="true"] span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.mobile-toggle[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.mobile-toggle[aria-expanded="true"] span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
 }
 
 /* --------------------------------------------------------------------------
@@ -2603,6 +2634,8 @@ button {
 /* --------------------------------------------------------------------------
    16. RESPONSIVE DESIGN & MOBILE OPTIMIZATIONS
    -------------------------------------------------------------------------- */
+
+/* Large Tablets & Medium Laptops (max-width: 992px) */
 @media (max-width: 992px) {
   .hero-grid {
     grid-template-columns: 1fr;
@@ -2616,15 +2649,23 @@ button {
 
   .chat-window-wrapper {
     grid-template-columns: 1fr;
+    gap: 24px;
   }
 
   .chat-side-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
   }
 
   .helper-grid {
     grid-template-columns: 1fr;
+    gap: 28px;
   }
 
   .pricing-grid {
@@ -2641,6 +2682,7 @@ button {
 
   .advisor-bio-grid {
     grid-template-columns: 1fr;
+    gap: 28px;
   }
 
   .advisor-bio-photo-wrapper {
@@ -2651,71 +2693,896 @@ button {
 
   .footer-grid {
     grid-template-columns: 1fr 1fr;
+    gap: 32px;
   }
 }
 
+/* Tablets & Mobile Devices (max-width: 768px) */
 @media (max-width: 768px) {
+  /* Container & Spacing */
+  .container {
+    padding: 0 18px;
+  }
+
+  .section-padding {
+    padding: 48px 0;
+  }
+
+  .section-header {
+    margin-bottom: 32px;
+  }
+
+  .section-title {
+    font-size: clamp(1.6rem, 5.5vw, 2.1rem);
+  }
+
+  .section-desc {
+    font-size: 0.94rem;
+  }
+
+  /* Top Banner (Compact on mobile) */
   .top-banner {
-    display: none; /* Hide top banner on small screens to conserve vertical height */
+    padding: 6px 0;
+    font-size: 0.76rem;
+  }
+
+  .banner-content {
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .banner-text {
+    font-size: 0.76rem;
+    line-height: 1.35;
+  }
+
+  .banner-extra {
+    display: none;
+  }
+
+  /* Header & Navigation */
+  .site-header {
+    background: rgba(8, 14, 26, 0.95);
   }
 
   .header-container {
-    height: 66px;
+    height: 64px;
   }
 
-  .nav-menu {
-    position: fixed;
-    top: 66px;
-    left: 0;
-    width: 100%;
-    background: #0A1222;
-    border-bottom: 1px solid var(--border-subtle);
-    flex-direction: column;
-    padding: 20px;
-    gap: 14px;
-    transform: translateY(-150%);
-    transition: transform var(--transition-normal);
-    z-index: 99;
+  .brand-logo {
+    gap: 10px;
   }
 
-  .nav-menu.open {
-    transform: translateY(0);
+  .logo-img {
+    width: 44px;
+    height: 44px;
+  }
+
+  .brand-title {
+    font-size: 1.25rem;
+  }
+
+  .brand-sub {
+    font-size: 0.68rem;
+  }
+
+  .header-actions {
+    gap: 8px;
+  }
+
+  .btn-header-wa {
+    padding: 8px 14px;
+    font-size: 0.84rem;
+  }
+
+  .btn-wa-text {
+    display: none;
+  }
+
+  .btn-wa-mobile-text {
+    display: inline;
   }
 
   .mobile-toggle {
     display: flex;
   }
 
+  /* Full-featured Mobile Menu Drawer */
+  .nav-menu {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background: rgba(10, 18, 34, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 2px solid var(--border-glow);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+    flex-direction: column;
+    padding: 20px 18px 28px;
+    gap: 10px;
+    transform: translateY(-130%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+    z-index: 99;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav-menu.open {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .nav-menu .nav-link {
+    width: 100%;
+    padding: 12px 18px;
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+    min-height: 48px;
+  }
+
+  .nav-menu .nav-link:hover,
+  .nav-menu .nav-link:active,
+  .nav-menu .nav-link.active {
+    background: rgba(0, 86, 210, 0.25);
+    border-color: var(--color-primary-light);
+    color: #FFFFFF;
+  }
+
+  .nav-menu .nav-link.nav-highlight {
+    background: rgba(255, 183, 3, 0.15);
+    border-color: rgba(255, 183, 3, 0.4);
+    color: #FCD34D;
+  }
+
+  /* Hero Section */
+  .hero-section {
+    padding: 32px 0 24px;
+  }
+
+  .hero-grid {
+    gap: 28px;
+  }
+
   .hero-title {
-    font-size: 2.1rem;
+    font-size: clamp(1.75rem, 6.2vw, 2.3rem);
+    line-height: 1.22;
+  }
+
+  .hero-lead {
+    font-size: 0.94rem;
+    line-height: 1.55;
+    margin-bottom: 20px;
   }
 
   .hero-highlights {
     grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .highlight-item {
+    padding: 10px 14px;
+    font-size: 0.85rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .hero-buttons .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 13px 18px;
+    font-size: 0.96rem;
+    min-height: 48px;
+  }
+
+  .hero-small-notice {
+    padding: 12px 14px;
+    font-size: 0.8rem;
+    line-height: 1.45;
+  }
+
+  /* Hero Advisor Card */
+  .advisor-card {
+    width: 100%;
+    max-width: 440px;
+    padding: 22px 18px;
+  }
+
+  .advisor-img-container {
+    width: 120px;
+    height: 120px;
+  }
+
+  .advisor-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .stat-box {
+    padding: 8px 4px;
+  }
+
+  .stat-number {
+    font-size: 1.05rem;
+  }
+
+  .stat-desc {
+    font-size: 0.68rem;
+  }
+
+  .btn-whatsapp-direct {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 0.92rem;
+    min-height: 48px;
+  }
+
+  /* Partners Banner */
+  .partners-banner {
+    margin-top: 28px;
+    padding: 16px 14px;
+    gap: 12px;
+  }
+
+  .partners-logos {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .partner-item {
+    justify-content: center;
+    padding: 8px 10px;
+    gap: 8px;
+  }
+
+  .partner-img {
+    height: 28px;
+  }
+
+  .partner-name {
+    font-size: 0.78rem;
+    text-align: center;
+  }
+
+  /* =========================================================================
+     VIRTUAL CHAT SECTION (SEGUNDA SECCIÓN) - Mobile App Experience
+     ========================================================================= */
+  .chat-section {
+    padding: 44px 0 36px;
+  }
+
+  .chat-window-wrapper {
+    gap: 20px;
+  }
+
+  .chat-window-container {
+    height: clamp(520px, 78vh, 620px);
+    border-radius: var(--radius-lg);
+  }
+
+  .chat-window-header {
+    padding: 10px 14px;
+  }
+
+  .chat-avatar-wrapper {
+    width: 38px;
+    height: 38px;
+  }
+
+  .chat-advisor-name {
+    font-size: 0.98rem;
+  }
+
+  .chat-verified-badge {
+    font-size: 0.65rem;
+    padding: 1px 5px;
+  }
+
+  .chat-advisor-role {
+    font-size: 0.72rem;
+  }
+
+  .chat-btn-header {
+    padding: 5px 8px;
+    font-size: 0.75rem;
+  }
+
+  .chat-notice-bar {
+    padding: 8px 12px;
+    font-size: 0.76rem;
+    line-height: 1.35;
+  }
+
+  .notice-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .chat-messages-area {
+    padding: 14px 10px;
+    gap: 12px;
+  }
+
+  .chat-msg {
+    max-width: 88%;
+    gap: 8px;
+  }
+
+  .msg-avatar {
+    width: 30px;
+    height: 30px;
+  }
+
+  .msg-bubble {
+    padding: 10px 14px;
+    font-size: 0.88rem;
+    line-height: 1.44;
+    border-radius: 16px;
+  }
+
+  .chat-msg.bot .msg-bubble {
+    border-bottom-left-radius: 4px;
+  }
+
+  .chat-msg.user .msg-bubble {
+    border-bottom-right-radius: 4px;
+  }
+
+  .msg-time {
+    font-size: 0.65rem;
+  }
+
+  .typing-indicator {
+    padding: 6px 14px;
+  }
+
+  .typing-dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .typing-text {
+    font-size: 0.72rem;
+  }
+
+  /* Quick action buttons on mobile */
+  .chat-quick-actions {
+    padding: 8px 12px;
+    gap: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .chat-quick-actions::-webkit-scrollbar {
+    display: none;
+  }
+
+  .action-chip {
+    padding: 7px 12px;
+    font-size: 0.8rem;
+    min-height: 38px;
+  }
+
+  .action-chip:active {
+    transform: scale(0.96);
+    background: var(--color-primary);
+  }
+
+  /* Chat Input Form */
+  .chat-input-form {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+
+  .chat-text-input {
+    font-size: 16px; /* Prevents auto-zoom in mobile Safari / Chrome */
+    padding: 10px 14px;
+  }
+
+  .chat-send-button {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+  }
+
+  .chat-window-footer-note {
+    padding: 6px 12px;
+    font-size: 0.7rem;
+    line-height: 1.3;
+  }
+
+  /* Chat Side Cards (under chat on mobile) */
+  .side-info-card {
+    padding: 16px 14px;
+    border-radius: var(--radius-md);
+  }
+
+  .side-card-icon {
+    margin-bottom: 8px;
+  }
+
+  .side-card-title {
+    font-size: 0.95rem;
+  }
+
+  .side-card-text {
+    font-size: 0.82rem;
+  }
+
+  /* Services Section (Tercera Sección) */
+  .services-section {
+    padding: 44px 0 36px;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .service-card {
+    padding: 20px 16px;
+  }
+
+  .service-logo-wrapper {
+    width: 54px;
+    height: 54px;
+    padding: 6px;
+  }
+
+  .service-name {
+    font-size: 1.15rem;
+  }
+
+  .service-detail {
+    font-size: 0.86rem;
+    margin-bottom: 12px;
+  }
+
+  .service-features {
+    font-size: 0.8rem;
+    gap: 6px;
+    padding-top: 10px;
+    margin-bottom: 16px;
+  }
+
+  .btn-service-action {
+    padding: 12px 14px;
+    font-size: 0.9rem;
+    min-height: 44px;
+  }
+
+  /* Invoice Helper Section ("¿Dónde está mi código?") */
+  .invoice-helper-section {
+    padding: 44px 0 36px;
+  }
+
+  .helper-tabs {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .helper-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .helper-tab {
+    padding: 12px 14px;
+    font-size: 0.84rem;
+    flex: 0 0 auto;
+    min-width: 140px;
+    justify-content: center;
+  }
+
+  .helper-tab-panels {
+    padding: 20px 14px;
+  }
+
+  .helper-badge-line h3 {
+    font-size: 1.15rem;
+  }
+
+  .helper-content p {
+    font-size: 0.88rem;
+    margin-bottom: 16px;
+  }
+
+  .helper-steps-list {
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .helper-steps-list li {
+    gap: 10px;
+  }
+
+  .step-num {
+    width: 24px;
+    height: 24px;
+    font-size: 0.75rem;
+  }
+
+  .helper-steps-list li strong {
+    font-size: 0.86rem;
+  }
+
+  .helper-steps-list li p {
+    font-size: 0.8rem;
+  }
+
+  .sample-bill-mockup {
+    padding: 16px 14px;
+  }
+
+  .bill-highlight-box {
+    padding: 10px 12px;
+  }
+
+  .highlight-value {
+    font-size: 0.95rem;
+  }
+
+  .highlight-value strong {
+    font-size: 1.05rem;
+  }
+
+  /* Pricing & Benefits */
+  .pricing-section {
+    padding: 44px 0 36px;
+  }
+
+  .pricing-highlight-box {
+    padding: 20px 14px;
+    margin-bottom: 24px;
+  }
+
+  .price-circle {
+    width: 120px;
+    height: 120px;
+  }
+
+  .price-circle .amount {
+    font-size: 3.2rem;
+  }
+
+  .pricing-rule-title {
+    font-size: 1.2rem;
+  }
+
+  .pricing-rule-p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .pricing-examples-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 
   .comparison-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 
-  .chat-window-container {
-    height: 580px;
+  .comp-card {
+    padding: 18px 14px;
   }
 
-  .chat-input-form {
-    padding: 10px 12px;
+  .comp-header h4 {
+    font-size: 1.05rem;
   }
 
-  .btn-attach .attach-label {
-    display: none;
+  .comp-card ul {
+    font-size: 0.86rem;
+    gap: 8px;
   }
 
-  .btn-attach {
-    padding: 8px 10px;
+  /* Advisor Bio */
+  .advisor-bio-section {
+    padding: 44px 0 36px;
+  }
+
+  .advisor-bio-grid {
+    padding: 20px 14px;
+    gap: 24px;
+  }
+
+  .advisor-bio-photo-wrapper {
+    height: 290px;
+    max-width: 320px;
+  }
+
+  .bio-lead {
+    font-size: 0.92rem;
+    line-height: 1.55;
+    margin-bottom: 18px;
+  }
+
+  .bio-points {
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .bio-point {
+    padding: 12px 14px;
+    gap: 12px;
+  }
+
+  .bio-action .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 13px 16px;
+    font-size: 0.94rem;
+  }
+
+  /* FAQ Accordion */
+  .faq-section {
+    padding: 44px 0 36px;
+  }
+
+  .faq-question {
+    padding: 14px 16px;
+    font-size: 0.95rem;
+    min-height: 48px;
+  }
+
+  .faq-answer {
+    padding: 0 16px 16px;
+    font-size: 0.86rem;
+  }
+
+  /* Footer */
+  .site-footer {
+    padding: 40px 0 20px;
   }
 
   .footer-grid {
     grid-template-columns: 1fr;
-    gap: 30px;
+    gap: 28px;
+    margin-bottom: 30px;
+  }
+
+  .footer-links a {
+    padding: 4px 0;
+    display: inline-block;
+  }
+
+  .footer-bottom-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+
+  /* Floating Chat Widget */
+  .floating-chat-widget {
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    right: 16px;
+    gap: 10px;
+  }
+
+  .floating-chat-toggle {
+    width: 52px;
+    height: 52px;
+  }
+
+  .icon-chat-btn {
+    width: 24px;
+    height: 24px;
+  }
+
+  .floating-chat-bubble {
+    max-width: min(290px, calc(100vw - 32px));
+    padding: 10px 14px;
+    font-size: 0.78rem;
+  }
+
+  /* Digital Ticket Modal */
+  .modal-dialog {
+    width: 95vw;
+    max-width: 420px;
+    margin: auto;
+    max-height: 88vh;
+  }
+
+  .modal-body {
+    padding: 16px 14px;
+  }
+
+  .digital-ticket-card {
+    padding: 18px 14px;
+  }
+
+  .ticket-brand-name {
+    font-size: 1.15rem;
+  }
+
+  .ticket-row {
+    font-size: 0.82rem;
+  }
+
+  .modal-footer {
+    padding: 12px 14px;
+  }
+}
+
+/* Compact Smartphones (max-width: 480px) */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 14px;
+  }
+
+  .header-container {
+    height: 60px;
+  }
+
+  .logo-img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .brand-title {
+    font-size: 1.15rem;
+  }
+
+  .brand-sub {
+    font-size: 0.64rem;
+  }
+
+  .btn-header-wa {
+    padding: 7px 10px;
+    font-size: 0.78rem;
+  }
+
+  .mobile-toggle {
+    width: 36px;
+    height: 36px;
+    padding: 8px 6px;
+  }
+
+  .hero-title {
+    font-size: clamp(1.55rem, 6.8vw, 1.95rem);
+  }
+
+  .hero-lead {
+    font-size: 0.88rem;
+  }
+
+  .advisor-card {
+    padding: 18px 14px;
+  }
+
+  .advisor-name {
+    font-size: 1.2rem;
+  }
+
+  .advisor-stats {
+    gap: 4px;
+  }
+
+  .stat-number {
+    font-size: 0.98rem;
+  }
+
+  .stat-desc {
+    font-size: 0.65rem;
+  }
+
+  .partners-banner {
+    padding: 14px 10px;
+  }
+
+  .partners-logos {
+    gap: 8px;
+  }
+
+  .partner-item {
+    padding: 6px 8px;
+    gap: 6px;
+  }
+
+  .partner-img {
+    height: 24px;
+  }
+
+  .partner-name {
+    font-size: 0.74rem;
+  }
+
+  /* Chat window compact */
+  .chat-window-container {
+    height: clamp(490px, 75vh, 580px);
+  }
+
+  .chat-msg {
+    max-width: 92%;
+  }
+
+  .msg-bubble {
+    padding: 9px 12px;
+    font-size: 0.85rem;
+  }
+
+  .action-chip {
+    padding: 6px 11px;
+    font-size: 0.76rem;
+  }
+
+  .price-circle {
+    width: 105px;
+    height: 105px;
+  }
+
+  .price-circle .amount {
+    font-size: 2.8rem;
+  }
+
+  .floating-chat-toggle {
+    width: 48px;
+    height: 48px;
+  }
+
+  .icon-chat-btn {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+/* Ultra-compact Screens (max-width: 360px) */
+@media (max-width: 360px) {
+  .btn-wa-mobile-text {
+    display: none;
+  }
+
+  .btn-header-wa {
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+  }
+
+  .brand-title {
+    font-size: 1.05rem;
+  }
+
+  .hero-title {
+    font-size: 1.48rem;
+  }
+
+  .chat-advisor-name-row {
+    flex-wrap: wrap;
+  }
+
+  .chat-advisor-name {
+    font-size: 0.9rem;
+  }
+
+  .chat-window-container {
+    height: 470px;
+  }
+
+  .chat-btn-header span:not(#sound-icon) {
+    display: none;
+  }
+
+  .stat-number {
+    font-size: 0.9rem;
+  }
+
+  .stat-desc {
+    font-size: 0.62rem;
   }
 }
